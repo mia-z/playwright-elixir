@@ -295,13 +295,14 @@ defmodule Playwright.Frame do
   @spec eval_on_selector(Frame.t(), binary(), binary(), term(), map()) :: term()
   def eval_on_selector(frame, selector, expression, arg \\ nil, options \\ %{})
 
-  def eval_on_selector(%Frame{session: session} = frame, selector, expression, arg, _options) do
+  def eval_on_selector(%Frame{session: session} = frame, selector, expression, arg, options) do
+    message = Map.merge(options, %{
+      selector: selector,
+      expression: expression,
+      arg: serialize(arg)
+    })
     parse_result(fn ->
-      Channel.post(session, {:guid, frame.guid}, :eval_on_selector, %{
-        selector: selector,
-        expression: expression,
-        arg: serialize(arg)
-      })
+      Channel.post(session, {:guid, frame.guid}, :eval_on_selector, message)
     end)
   end
 

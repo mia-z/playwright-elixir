@@ -2,7 +2,7 @@ defmodule Playwright.SDK.Helpers.Serialization do
   @moduledoc false
   require Logger
   import Playwright.SDK.Extra.Map
-
+  
   def deserialize(:ok) do
     Logger.warning("Received `Playwright.SDK.Helpers.Serialization.deserialize/1` with `:ok`. It's unclear why this is happening")
     :ok
@@ -48,6 +48,12 @@ defmodule Playwright.SDK.Helpers.Serialization do
     Enum.map(value, &deserialize(&1))
   end
 
+  def deserialize(data) do
+    Logger.warning("Received catch-all for deserialize")
+    Logger.info inspect data
+    :ok
+  end
+  
   def serialize(arg) do
     {value, handles} = serialize(arg, [], 0)
     %{value: deep_atomize_keys(value), handles: handles}
