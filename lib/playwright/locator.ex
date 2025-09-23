@@ -26,6 +26,11 @@ defmodule Playwright.Locator do
 
   @type options() :: %{optional(:timeout) => non_neg_integer()}
 
+  @type options_wait() :: %{
+    optional(:timeout) => non_neg_integer(),
+    optional(:state) => binary()
+  }
+  
   @type options_keyboard() :: %{
           optional(:delay) => non_neg_integer(),
           optional(:no_wait_after) => boolean(),
@@ -1332,7 +1337,7 @@ defmodule Playwright.Locator do
   # const orderSent = page.locator('#order-sent');
   # await orderSent.waitFor();
 
-  @spec wait_for(t(), options()) :: t() | {:error, Channel.Error.t()}
+  @spec wait_for(t(), options_wait()) :: t() | {:error, Channel.Error.t()}
   def wait_for(%Locator{} = locator, options \\ %{}) do
     case Frame.wait_for_selector(locator.frame, locator.selector, options) do
       {:error, _} = error ->
