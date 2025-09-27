@@ -26,6 +26,14 @@ defmodule Playwright.Locator do
 
   @type options() :: %{optional(:timeout) => non_neg_integer()}
 
+  @type options_screenshot() :: %{
+    optional(:timeout) => non_neg_integer(),
+    optional(:quality) => non_neg_integer(),
+    optional(:path) => binary(),
+    optional(:omit_background) => boolean(),
+    optional(:type) => :jpeg | :png
+  }
+  
   @type options_wait() :: %{
     optional(:timeout) => non_neg_integer(),
     optional(:state) => binary()
@@ -1004,7 +1012,7 @@ defmodule Playwright.Locator do
   | `:timeout`         | option | `number()`        | Maximum time in milliseconds. Pass `0` to disable timeout. The default value can be changed by using the `Playwright.BrowserContext.set_default_timeout/2` or `Playwright.Page.set_default_timeout/2` functions. `(default: 30 seconds)` |
   | `:type`            | option | `:png` or `:jpeg` | Specify screenshot type. `(default: :png)` |
   """
-  @spec screenshot(t(), options()) :: binary()
+  @spec screenshot(t(), options_screenshot()) :: binary()
   def screenshot(%Locator{} = locator, options \\ %{}) do
     with_element(locator, options, fn handle ->
       ElementHandle.screenshot(handle, options)
